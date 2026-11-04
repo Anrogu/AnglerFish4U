@@ -1,0 +1,49 @@
+name: "Language Pixel Art Anglerfish"
+description: "Generates an animated pixel art anglerfish colored by your top GitHub languages."
+author: "Anrogu"
+branding:
+  icon: "award"
+  color: "blue"
+
+inputs:
+  github_username:
+    description: "GitHub username to fetch language stats for"
+    required: true
+  github_token:
+    description: "GitHub token to increase API rate limits"
+    required: false
+    default: ${{ github.token }}
+  svg_out:
+    description: "Output path for the generated SVG"
+    required: false
+    default: "anglerfish.svg"
+  gif_out:
+    description: "Output path for the generated GIF"
+    required: false
+    default: "anglerfish.gif"
+  readme_path:
+    description: "Path to the README file to update"
+    required: false
+    default: "README.md"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Install Rust toolchain
+      uses: dtolnay/rust-toolchain@stable
+
+    - name: Cache Rust dependencies
+      uses: Swatinem/rust-cache@v2
+      with:
+        workspaces: ${{ github.action_path }}
+
+    - name: Generate Anglerfish
+      shell: bash
+      env:
+        GH_USERNAME: ${{ inputs.github_username }}
+        GH_TOKEN: ${{ inputs.github_token }}
+        SVG_OUT: ${{ inputs.svg_out }}
+        GIF_OUT: ${{ inputs.gif_out }}
+        README_PATH: ${{ inputs.readme_path }}
+      run: |
+        cargo run --release --manifest-path "${{ github.action_path }}/Cargo.toml"
