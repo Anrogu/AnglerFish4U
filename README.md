@@ -31,7 +31,7 @@ jobs:
         uses: actions/checkout@v4
  
       - name: Run Anglerfish Action
-        uses: Anrogu/AnglerFish4U
+        uses: Anrogu/AnglerFish4U@v1.0.0
         with:
           github_username: ${{ github.repository_owner }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
